@@ -76,7 +76,7 @@ export default function BadUIForm() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    alert('Félicitations ! Vous avez réussi à soumettre le formulaire impossible ! 🎉');
+    alert('"Le mot de passe doit contenir au moins 8 caractères"');
   };
 
   return (
