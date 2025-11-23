@@ -6,14 +6,15 @@ export default function BadUIForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
-
   const [fallingChar, setFallingChar] = useState<string | null>(null);
   const [showFalling, setShowFalling] = useState(false);
   const [fallingPosition, setFallingPosition] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
   });
+
+  // message d'erreur au-dessus de l'input mot de passe
+  const [error, setError] = useState('');
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -27,6 +28,11 @@ export default function BadUIForm() {
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+
+    // On efface le message d'erreur dès que l'utilisateur recommence à taper
+    if (error) {
+      setError('');
+    }
 
     // Si le mot de passe a déjà 7 caractères et qu'on essaie d'en ajouter un
     if (password.length === 7 && newValue.length > password.length) {
@@ -66,17 +72,10 @@ export default function BadUIForm() {
     }
   };
 
-  const handleMouseEnter = () => {
-    const maxX = 250;
-    const maxY = 200;
-    const randomX = Math.random() * maxX - 125;
-    const randomY = Math.random() * maxY - 100;
-    setButtonPosition({ x: randomX, y: randomY });
-  };
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    alert('"Le mot de passe doit contenir au moins 8 caractères"');
+    // On affiche le message au-dessus de l'input mot de passe
+    setError('Le mot de passe doit contenir au moins 8 caractères');
   };
 
   return (
@@ -152,6 +151,7 @@ export default function BadUIForm() {
             >
               Mot de passe : <span className="text-sm">(min 8 caractères)</span>
             </label>
+
             <input
               ref={passwordRef}
               type="text"
@@ -163,16 +163,21 @@ export default function BadUIForm() {
               className="w-full px-4 py-2 border-4 border-blue-600 bg-yellow-200 text-green-900 text-lg font-bold transform rotate-1"
               style={{ fontFamily: 'Courier New, monospace' }}
             />
+
+            {/* Message d'erreur EN DESSOUS de l'input */}
+            {error && (
+              <p className="text-red-600 text-sm font-bold mt-1">
+                {error}
+              </p>
+            )}
           </div>
 
           <div className="relative h-20">
             <button
               type="submit"
-              onMouseEnter={handleMouseEnter}
               style={{
-                transform: `translate(${buttonPosition.x}px, ${buttonPosition.y}px) rotate(${buttonPosition.x / 10}deg)`,
-                transition: 'transform 0.3s ease',
                 fontFamily: 'Comic Sans MS, cursive',
+                transition: 'transform 0.3s ease',
               }}
               className="w-full px-4 py-3 bg-orange-600 text-yellow-200 font-black text-xl border-4 border-purple-700 shadow-lg hover:bg-red-600"
             >
